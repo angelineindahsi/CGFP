@@ -1,5 +1,5 @@
 function makeSkybox(scene, folder){
-  var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:10000.0}, scene);
+  var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
 
   var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
   skyboxMaterial.backFaceCulling = false;
@@ -14,3 +14,12 @@ function makeSkybox(scene, folder){
 
   return skybox;
 }
+
+dir = 1;
+function waterFlow(skybox){
+  skybox.position.x += (dir*(Math.floor(Math.random()*7)+1));
+}
+
+setInterval(function(){
+  dir *= -1;
+},20000);

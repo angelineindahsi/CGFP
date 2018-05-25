@@ -55,7 +55,7 @@ window.addEventListener("mousemove", function () {
 });*/
 
 function shoot(){
-  var bullet = BABYLON.Mesh.CreateSphere('bullet', 10, 0.8, scene);
+  var bullet = BABYLON.Mesh.CreateSphere('bullet', 10, 1, scene);
   var startPos = player.position;
 
   //make bullets
@@ -63,31 +63,39 @@ function shoot(){
   bullet.material =  new BABYLON.StandardMaterial('texture1', scene);
   bullet.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
 
-  var invView = new BABYLON.Matrix();
-  camera.getViewMatrix().invertToRef(invView);
+  //var invView = new BABYLON.Matrix();
+  //camera.getViewMatrix().invertToRef(invView);
+  //console.log(invView);
   var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-  //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 1, 0), invView);
+  //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 7, 7), invView);
 
-  if(pickResult.hit){
-    var direction = BABYLON.Vector3.TransformNormal(pickResult.pickedPoint, invView);
-    console.log(pickResult.pickedPoint);
+  var xdir = pickResult.pickedPoint.x - startPos.x;
+  var ydir = pickResult.pickedPoint.y - startPos.y;
+  var zdir = pickResult.pickedPoint.z - startPos.z;
+  //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(-xdir, -ydir, startPos.z), invView);
 
-    direction.normalize();
+  direction.normalize();
 
-    scene.registerBeforeRender(function () {
-        bullet.position.addInPlace(direction);
-    });
-  }
+  scene.registerBeforeRender(function () {
+      bullet.position.addInPlace(direction);
+  });
 
   //bullet timeout
   setTimeout(function(){
     bullet.dispose();
-  },10000);
+  },5000);
 }
-window.addEventListener("click", function (e) {
-      shoot();
 
-	});
+window.addEventListener("click", function (e) {
+  shoot();
+
+  var pickInfo = scene.pick(scene.pointerX, scene.pointerY);
+  target = pickInfo.pickedMesh;
+
+  if (pickInfo.hit && target.id == "enemy") {
+    target.dispose();
+  }
+});
 
 
 function holdPlayer(){
@@ -97,8 +105,9 @@ function holdPlayer(){
       player.lookAt(pickResult.pickedPoint);
     }
 
-  if(player.position.x >= 1000) player.position.x = 1000;
-  if(player.position.z >= 1000) player.position.z = 1000;
-  if(player.position.x <= -1000) player.position.x = -1000;
-  if(player.position.z <= -1000) player.position.z = -1000;
+  if(player.position.y > 3 || player.position.y > 3) player.position.y = 3;
+  if(player.position.x >= 161) player.position.x = 161;
+  if(player.position.z >= 71) player.position.z = 71;
+  if(player.position.x <= -161) player.position.x = -161;
+  if(player.position.z <= -71) player.position.z = -71;
 }
