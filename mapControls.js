@@ -65,14 +65,12 @@ function shoot(){
 
   var invView = new BABYLON.Matrix();
   camera.getViewMatrix().invertToRef(invView);
-  console.log(invView);
   var pickResult = scene.pick(scene.pointerX, scene.pointerY);
   //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 1, 0), invView);
 
   if(pickResult.hit){
-    var tgt = new BABYLON.Vector3(-pickResult.pickedPoint.x,0,-pickResult.pickedPoint.y)
-    var direction = BABYLON.Vector3.TransformNormal(tgt, invView);
-    //console.log(pickResult.pickedPoint);
+    var direction = BABYLON.Vector3.TransformNormal(pickResult.pickedPoint, invView);
+    console.log(pickResult.pickedPoint);
 
     direction.normalize();
 
@@ -99,7 +97,6 @@ function holdPlayer(){
       player.lookAt(pickResult.pickedPoint);
     }
 
-  if(player.position.y > 3 || player.position.y > 3) player.position.y = 3;
   if(player.position.x >= 1000) player.position.x = 1000;
   if(player.position.z >= 1000) player.position.z = 1000;
   if(player.position.x <= -1000) player.position.x = -1000;

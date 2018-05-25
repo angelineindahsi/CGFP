@@ -67,38 +67,23 @@
 				player = getPlayer(scene);
 				camera.lockedTarget = player;
 
-				mons = {};
-				var level = 5;
+				enemy = getEnemy(scene);
+				enemy.position = new BABYLON.Vector3(20,3,20);
 
-				for (var i = 1; i <= level; i++) {
-					mons[i] = getEnemy(scene);
-					//mons[i] = new BABYLON.MeshBuilder.CreateBox("", {height:4, width:5.5, depth:23}, scene);
-
-					if (Math.floor(i%2) != 0) {
-						mons[i].position = new BABYLON.Vector3(player.position.x - (Math.floor(Math.random()*100)+10),3,player.position.x - (Math.floor(Math.random()*100)+10));
-					}
-					else {
-						mons[i].position = new BABYLON.Vector3(player.position.x + (Math.floor(Math.random()*100)+10),3,player.position.x + (Math.floor(Math.random()*100)+10));
-					}
-					alert(mons[i].position);
-				}
 /*
 				setInterval(function(){
 					getEnemy(scene);
 				},5000);*/
 
-				cnt = 1;
 				scene.registerBeforeRender(function () {
+					moveEnemy();
+
 					holdPlayer();
 
 				});
 
 				engine.runRenderLoop(function(){
 					scene.render();
-					moveEnemy(mons[cnt]);cnt++;
-					if (cnt>level) {
-						cnt = 1;
-					}
 
 				});
 			});

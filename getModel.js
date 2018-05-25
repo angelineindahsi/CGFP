@@ -29,11 +29,11 @@ function getPlayer(scene){
 
 function getEnemy(scene){
 //import model
-  enemy = new BABYLON.MeshBuilder.CreateBox("", {height:4, width:5.5, depth:23}, scene);
+  enemy = new BABYLON.MeshBuilder.CreateBox("enemy", {height:4, width:5.5, depth:23}, scene);
   enemy.isVisible = false;
 
-  //enemyphy = new BABYLON.PhysicsImpostor(enemy, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution:0.5, friction:0.0},scene);
-  //enemy.physicsImpostor = enemyphy;
+  enemyphy = new BABYLON.PhysicsImpostor(enemy, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution:0.5, friction:0.0},scene);
+  enemy.physicsImpostor = enemyphy;
 
   BABYLON.SceneLoader.ImportMesh("","enemy/","iblis.babylon",scene,
     function(newMeshes){

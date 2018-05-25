@@ -15,7 +15,7 @@ function getCam(scene){
   //position cam overwrite alpha, beta, radius
   //camera.setPosition(new BABYLON.Vector3(0,camY,50));
   //attach cam to canvas
-  camera.attachControl(canvas,true);
+  //camera.attachControl(canvas,true);
 
   return camera;
 }
