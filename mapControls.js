@@ -61,18 +61,19 @@ function shoot(){
   //make bullets
   bullet.position = new BABYLON.Vector3(startPos.x, startPos.y, startPos.z);
   bullet.material =  new BABYLON.StandardMaterial('texture1', scene);
-  bullet.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+  bullet.material.diffuseColor = new BABYLON.Color3(0, 1, 1);
 
-  //var invView = new BABYLON.Matrix();
-  //camera.getViewMatrix().invertToRef(invView);
+  var invView = new BABYLON.Matrix();
+  freecam.getViewMatrix().invertToRef(invView);
   //console.log(invView);
-  var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-  //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 7, 7), invView);
+  var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 0, 50), invView);
 
-  var xdir = pickResult.pickedPoint.x - startPos.x;
-  var ydir = pickResult.pickedPoint.y - startPos.y;
-  var zdir = pickResult.pickedPoint.z - startPos.z;
+  // var xdir = pickResult.pickedPoint.x - startPos.x;
+  // var ydir = pickResult.pickedPoint.y - startPos.y;
+  // var zdir = pickResult.pickedPoint.z - startPos.z;
   //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(-xdir, -ydir, startPos.z), invView);
+
+  //var direction = player.LookAtPosition();
 
   direction.normalize();
 

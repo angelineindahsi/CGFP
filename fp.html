@@ -32,17 +32,6 @@
 				//make scene
 				scene = new BABYLON.Scene(engine);
 
-				// WHEN CLICK, REMOVE THE CURSOR/POINTER MOUSE
-      // canvas.addEventListener("click", function(evt) {
-      //   canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
-      //   if (canvas.requestPointerLock) {
-      //       canvas.requestPointerLock();
-      //   }
-      // }, false);
-			//
-      // // ATTACH CAMERA AND CURSOR
-      // engine.isPointerLock = true;
-
 				//var music = new BABYLON.Sound("Music", "wotw.wav", scene, null, { loop: true, autoplay: true });
         //gravity = new BABYLON.Vector3(0, -9.8 ,0);
 				gravity = new BABYLON.Vector3(0, 0 ,0);
@@ -58,6 +47,9 @@
 
 				//inser camera
 				camera = getCam(scene);
+				freecam = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 2, 0), scene);
+				freecam.rotation.y = Math.PI;
+				scene.activeCamera = camera;
 
 				//make lighting
 				//var light = new BABYLON.HemisphericLight("hLight", new BABYLON.Vector3(0,100,0), scene);
@@ -70,8 +62,7 @@
 				lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
 				player = getPlayer(scene);
-				//camera.lockedTarget = player;
-
+				freecam.parent = player;
 
 				// for (var i = 1; i <= level; i++) {
 				// 	mons[i] = getEnemy(scene);
