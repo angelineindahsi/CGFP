@@ -62,6 +62,7 @@
 				lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
 				player = getPlayer(scene);
+
 				freecam.parent = player;
 
 				// for (var i = 1; i <= level; i++) {
@@ -81,9 +82,9 @@
 				var level = 3;
 				var i = 0;
 				var frameRate = 60;
-
+				
 				setInterval(function(){
-					if(i<level){
+					if(1){
 						mons[i] = getEnemy(scene);
 						//mons[i] = new BABYLON.MeshBuilder.CreateBox("", {height:4, width:5.5, depth:23}, scene);
 
@@ -93,20 +94,16 @@
 						else {
 							mons[i].position = new BABYLON.Vector3(player.position.x + (Math.floor(Math.random()*70)+10),3,player.position.x + (Math.floor(Math.random()*70)+10));
 						}
-						scene.beginDirectAnimation(mons[i], [side2side(mons[i].position.x)], 0, 2 * frameRate, true);
+						//scene.beginDirectAnimation(mons[i], [side2side(mons[i].position.x)], 0, 2 * frameRate, true);
 						i++;
 
 				}
 			},5000);
 
-				cnt = 0;
 				scene.registerBeforeRender(function () {
 					holdPlayer();
 					//moveEnemy(mons[cnt]);
-					cnt++;
-					if (cnt>level) {
-						cnt = 0;
-					}
+
 					waterFlow(skybox);
 
 				});
