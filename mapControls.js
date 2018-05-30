@@ -54,6 +54,44 @@ window.addEventListener("mousemove", function () {
     }
 });*/
 
+function vecToLocal(vector, mesh){
+    var m = mesh.getWorldMatrix();
+    var v = BABYLON.Vector3.TransformCoordinates(vector, m);
+    return v;
+}
+
+function target(mesh){
+  if (mesh.id == "enemy") {
+    return true;
+  }
+  return false;
+}
+
+function castRay(bullet){
+  var origin = player.position;
+
+  var forward = new BABYLON.Vector3(0,0,-1);
+  forward = vecToLocal(forward, player);
+
+  var direction = forward.subtract(origin);
+  direction = BABYLON.Vector3.Normalize(direction);
+
+  var length = 100;
+
+  var ray = new BABYLON.Ray(origin, direction, length);
+
+  //let rayHelper = new BABYLON.RayHelper(ray);
+  //rayHelper.show(scene);
+
+  var hit = scene.pickWithRay(ray, target);
+
+  if (hit.pickedMesh && bullet.intersectsMesh(hit.pickedMesh, true)){
+    bullet.dispose();
+    hit.pickedMesh.dispose();
+
+  }
+}
+
 function shoot(){
   var bullet = BABYLON.Mesh.CreateSphere('bullet', 10, 1, scene);
   var startPos = player.position;
@@ -66,20 +104,24 @@ function shoot(){
   var invView = new BABYLON.Matrix();
   freecam.getViewMatrix().invertToRef(invView);
   //console.log(invView);
-  var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 0, 50), invView);
-
-  // var xdir = pickResult.pickedPoint.x - startPos.x;
-  // var ydir = pickResult.pickedPoint.y - startPos.y;
-  // var zdir = pickResult.pickedPoint.z - startPos.z;
-  //var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(-xdir, -ydir, startPos.z), invView);
-
-  //var direction = player.LookAtPosition();
-
-  direction.normalize();
+  var direction = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 0, 7), invView);
 
   scene.registerBeforeRender(function () {
       bullet.position.addInPlace(direction);
+      castRay(bullet);
+
+      // for (var i = 0; i < mons.length; i++) {
+      //   console.log(mons[i].position);
+      //   console.log(mons.length);
+      //   mons[i] = enemy;
+        // if (bullet.intersectsMesh(enemy, true)) {
+        //   bullet.dispose();
+        //   enemy.dispose();
+        // }
+      // }
   });
+
+
 
   //bullet timeout
   setTimeout(function(){
@@ -90,12 +132,6 @@ function shoot(){
 window.addEventListener("click", function (e) {
   shoot();
 
-  var pickInfo = scene.pick(scene.pointerX, scene.pointerY);
-  target = pickInfo.pickedMesh;
-
-  if (pickInfo.hit && target.id == "enemy") {
-    target.dispose();
-  }
 });
 
 

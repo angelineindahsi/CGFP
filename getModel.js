@@ -1,8 +1,8 @@
 function getPlayer(scene){
 //import model
   char = new BABYLON.MeshBuilder.CreateBox("char", {height:4, width:5.5, depth:15}, scene);
-  char.position = new BABYLON.Vector3(0,4,0);
-  char.isVisible = false;
+  //char.position = new BABYLON.Vector3(0,4,0);
+  //char.isVisible = false;
 
   var charphy = new BABYLON.PhysicsImpostor(char, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution:0.0, friction:0.0},scene);
   char.physicsImpostor = charphy;
@@ -29,8 +29,8 @@ function getPlayer(scene){
 
 function getEnemy(scene){
 //import model
-  enemy = new BABYLON.MeshBuilder.CreateBox("enemy", {height:4, width:5.5, depth:23}, scene);
-  enemy.isVisible = false;
+  enemy = new BABYLON.MeshBuilder.CreateBox("enemy", {height:8, width:5.5, depth:23}, scene);
+  //enemy.isVisible = false;
 
   //enemyphy = new BABYLON.PhysicsImpostor(enemy, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution:0.5, friction:0.0},scene);
   //enemy.physicsImpostor = enemyphy;
