@@ -75,7 +75,7 @@
 
 			//summon enemy interval
 			setInterval(function(){
-				if(i<10){
+				if(1){
 					mons[i] = getEnemy(scene);
 
 					if (Math.floor(i%2) == 0) {
@@ -91,14 +91,14 @@
 
 					i++;
 				}
-		},5000);
+		},1000);
 
 			//passive functions
 			var enemyct = 0;
 			scene.registerBeforeRender(function () {
 				holdPlayer();
 				waterFlow(skybox);
-				raycost();
+				hitReg();
 
 				// if (i>2) {
 				// 	holdEnemy(mons[enemyct]);

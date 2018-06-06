@@ -11,6 +11,9 @@ left = 65;
 right = 68;
 spd = 50;
 
+//score
+points = 0;
+
 //keyboard controls
 window.onkeydown = function(event){
   //alert(event.keyCode);
@@ -93,7 +96,9 @@ function castRay(bullet){
 
   var hit = scene.pickWithRay(ray, target);
 
+
   if (hit.pickedMesh && bullet.intersectsMesh(hit.pickedMesh, true)){
+    points++;
     bullet.dispose();
     hit.pickedMesh.dispose();
   }
@@ -144,15 +149,15 @@ function holdPlayer(){
     }
 
     //hold position within camera
-  if(player.position.y > 3 || player.position.y > 3) player.position.y = 3;
+  //if(player.position.y > 3 || player.position.y > 3) player.position.y = 3;
   if(player.position.x >= 161) player.position.x = 161;
   if(player.position.z >= 71) player.position.z = 71;
   if(player.position.x <= -161) player.position.x = -161;
   if(player.position.z <= -71) player.position.z = -71;
 }
 
-var life = 1;
-function raycost(){
+var life = 3;
+function hitReg(){
   var origin = player.position;
 
   var forward = new BABYLON.Vector3(0,0,-1);
@@ -169,9 +174,13 @@ function raycost(){
 
   if (hit.pickedMesh){
     hit.pickedMesh.dispose();
+
+
     life--;
     if (life<0) {
       makeParticles(scene);
+      player.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(0, -60, 0));
+
     }
   }
 }

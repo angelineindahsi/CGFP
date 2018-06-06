@@ -20,7 +20,7 @@ function side2side(startpos){
 
     keys.push({
         frame: 100,
-        value: startpos+50
+        value: startpos+100
     });
 
     keys.push({
@@ -44,7 +44,7 @@ function slideup(startpos){
 
     keys.push({
         frame: 250,
-        value: startpos+300
+        value: startpos+1000
     });
 
     anim.setKeys(keys);
@@ -64,7 +64,7 @@ function slidedown(startpos){
 
     keys.push({
         frame: 250,
-        value: startpos-300
+        value: startpos-1000
     });
 
     anim.setKeys(keys);

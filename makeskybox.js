@@ -24,4 +24,4 @@ function waterFlow(skybox){
 
 setInterval(function(){
   skydir *= -1;
-},20000);
+},5000);

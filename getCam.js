@@ -11,7 +11,7 @@ function getCam(scene){
   //camera.upperRadiusLimit = 100;
 
   //attach cam controls
-  camera.attachControl(canvas,true);
+  //camera.attachControl(canvas,true);
 
   return camera;
 }
