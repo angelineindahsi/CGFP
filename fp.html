@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="getModel.js"></script>
 		<script type="text/javascript" src="mapControls.js"></script>
 		<script type="text/javascript" src="enemyAI.js"></script>
+		<script type="text/javascript" src="makeParticles.js"></script>
 
 		<link rel="stylesheet" href="fullscreen.css">
 	</head>
@@ -22,97 +23,99 @@
 
 		var canvas, engine, scene, camera;
 
-			document.addEventListener("DOMContentLoaded",function(){
-				//get the canvas
-				canvas = document.getElementById('renderCanvas');
+		document.addEventListener("DOMContentLoaded",function(){
+			//get the canvas
+			canvas = document.getElementById('renderCanvas');
 
-				//make babylon engine
-				engine = new BABYLON.Engine(canvas, true);
+			//make babylon engine
+			engine = new BABYLON.Engine(canvas, true);
 
-				//make scene
-				scene = new BABYLON.Scene(engine);
+			//make scene
+			scene = new BABYLON.Scene(engine);
 
-				//var music = new BABYLON.Sound("Music", "wotw.wav", scene, null, { loop: true, autoplay: true });
-        //gravity = new BABYLON.Vector3(0, -9.8 ,0);
-				gravity = new BABYLON.Vector3(0, 0 ,0);
-				physicsEngine = new BABYLON.CannonJSPlugin();
-				scene.enablePhysics(gravity,physicsEngine);
+			//play music
+			//var music = new BABYLON.Sound("Music", "wotw.wav", scene, null, { loop: true, autoplay: true });
 
-				//insert skybox
-				var skybox = makeSkybox(scene,"CloudyLightRays");
+			//physics engine
+			gravity = new BABYLON.Vector3(0, 0 ,0);
+			physicsEngine = new BABYLON.CannonJSPlugin();
+			scene.enablePhysics(gravity,physicsEngine);
 
-				//insert ground
-				var ground = BABYLON.Mesh.CreateGround("ground", 1000,1000,1, scene);
-				ground.rotation.x = Math.PI; // cull out ground
+			//insert skybox
+			var skybox = makeSkybox(scene,"CloudyLightRays");
 
-				//inser camera
-				camera = getCam(scene);
-				freecam = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 2, 0), scene);
-				freecam.rotation.y = Math.PI;
-				scene.activeCamera = camera;
+			//insert ground
+			var ground = BABYLON.Mesh.CreateGround("ground", 1000,1000,1, scene);
+			ground.rotation.x = Math.PI; // cull out ground
 
-				//make lighting
-				//var light = new BABYLON.HemisphericLight("hLight", new BABYLON.Vector3(0,100,0), scene);
-				var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
-				light.position = new BABYLON.Vector3(300, 300, -200);
+			//insert camera
+			camera = getCam(scene);
+			freecam = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 2, 0), scene);
+			freecam.rotation.y = Math.PI;
+			scene.activeCamera = camera;
 
-				var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-				lightSphere.position = light.position;
-				lightSphere.material = new BABYLON.StandardMaterial("light", scene);
-				lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
+			//make lighting
+			var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
+			light.position = new BABYLON.Vector3(300, 300, -200);
 
-				player = getPlayer(scene);
+			var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
+			lightSphere.position = light.position;
+			lightSphere.material = new BABYLON.StandardMaterial("light", scene);
+			lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
-				freecam.parent = player;
+			//create player
+			player = getPlayer(scene);
+			freecam.parent = player;
 
-				// for (var i = 1; i <= level; i++) {
-				// 	mons[i] = getEnemy(scene);
-				// 	//mons[i] = new BABYLON.MeshBuilder.CreateBox("", {height:4, width:5.5, depth:23}, scene);
-				//
-				// 	if (Math.floor(i%2) != 0) {
-				// 		mons[i].position = new BABYLON.Vector3(player.position.x - (Math.floor(Math.random()*100)+10), 3, player.position.x - (Math.floor(Math.random()*100)+10));
-				// 	}
-				// 	else {
-				// 		mons[i].position = new BABYLON.Vector3(player.position.x + (Math.floor(Math.random()*100)+10), 3, player.position.x + (Math.floor(Math.random()*100)+10));
-				// 	}
-				// 	alert(mons[i].position);
+			//values to increment challenge
+			mons = {};
+			var level = 3;
+			var i = 0;
+			var frameRate = 100;
+
+			//summon enemy interval
+			setInterval(function(){
+				if(i<10){
+					mons[i] = getEnemy(scene);
+
+					if (Math.floor(i%2) == 0) {
+						mons[i].position = new BABYLON.Vector3((Math.floor(Math.random()*300)-161),3,163);
+						scene.beginDirectAnimation(mons[i], [slidedown(mons[i].position.z)], 0, 250, true);
+					}
+					else {
+						mons[i].position = new BABYLON.Vector3((Math.floor(Math.random()*300)-161),3,-163);
+						mons[i].rotation.y = Math.PI;
+						scene.beginDirectAnimation(mons[i], [slideup(mons[i].position.z)], 0, 250, true);
+					}
+					scene.beginDirectAnimation(mons[i], [side2side(mons[i].position.x)], 0, 2 * frameRate, true);
+
+					i++;
+				}
+		},5000);
+
+			//passive functions
+			var enemyct = 0;
+			scene.registerBeforeRender(function () {
+				holdPlayer();
+				waterFlow(skybox);
+				raycost();
+
+				// if (i>2) {
+				// 	holdEnemy(mons[enemyct]);
+				// 	enemyct++;
+				// }
+				// if (enemyct>i) {
+				// 	enemyct = 0;
 				// }
 
-				mons = {};
-				var level = 3;
-				var i = 0;
-				var frameRate = 60;
-				
-				setInterval(function(){
-					if(1){
-						mons[i] = getEnemy(scene);
-						//mons[i] = new BABYLON.MeshBuilder.CreateBox("", {height:4, width:5.5, depth:23}, scene);
-
-						if (Math.floor(i%2) != 0) {
-							mons[i].position = new BABYLON.Vector3(player.position.x - (Math.floor(Math.random()*70)+10),3,player.position.x - (Math.floor(Math.random()*70)+10));
-						}
-						else {
-							mons[i].position = new BABYLON.Vector3(player.position.x + (Math.floor(Math.random()*70)+10),3,player.position.x + (Math.floor(Math.random()*70)+10));
-						}
-						//scene.beginDirectAnimation(mons[i], [side2side(mons[i].position.x)], 0, 2 * frameRate, true);
-						i++;
-
-				}
-			},5000);
-
-				scene.registerBeforeRender(function () {
-					holdPlayer();
-					//moveEnemy(mons[cnt]);
-
-					waterFlow(skybox);
-
-				});
-
-				engine.runRenderLoop(function(){
-					scene.render();
-
-				});
 			});
+
+			//render
+			engine.runRenderLoop(function(){
+				scene.render();
+
+			});
+		});
 
 		</script>
 

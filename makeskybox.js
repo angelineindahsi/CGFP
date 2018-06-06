@@ -2,8 +2,9 @@ function makeSkybox(scene, folder){
   var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
 
   var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-  skyboxMaterial.backFaceCulling = false;
+  skyboxMaterial.backFaceCulling = false;//set texture in box interior
 
+  //texturing skybox
   var sky = "Skyset/"+folder+"/skybox";
   skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture(sky, scene);
   skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
@@ -15,11 +16,12 @@ function makeSkybox(scene, folder){
   return skybox;
 }
 
-dir = 1;
+//give skybox sense of movement
+skydir = 1;
 function waterFlow(skybox){
-  skybox.position.x += (dir*(Math.floor(Math.random()*7)+1));
+  skybox.position.x += (skydir*Math.random()*0.5);
 }
 
 setInterval(function(){
-  dir *= -1;
+  skydir *= -1;
 },20000);

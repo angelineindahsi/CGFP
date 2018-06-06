@@ -1,25 +1,12 @@
-var alpha = 0;
-var radius = 50;
-var dir = 0.05;
-/*
-function moveEnemy(enemy){
-  //mov = (Math.floor(Math.random()*6)+1)*dir;
-  //enemy.position.x+=dir;
-
-  alpha += dir;
+//hold enemy positions within view
+function holdEnemy(enemy){
 
   enemy.lookAt(player.position);
 
-  enemy.position.x += 5*dir;
-  //enemy.position.x = (player.position.x + Math.cos(alpha) * radius);
-  //enemy.position.z = (player.position.z + Math.sin(alpha) * radius);
-
   if(enemy.position.y < player.position.y || enemy.position.y > player.position.y) enemy.position.y == player.position.y;
+  if(enemy.position.z < -155) enemy.position.z+=1;
+  if(enemy.position.z > 155) enemy.position.z-=1;
 }
-
-setInterval(function(){
-  dir *= -1;
-},(Math.floor(Math.random()*6)+1)*1000);*/
 
 function side2side(startpos){
   var anim = new BABYLON.Animation("tutoAnimation", "position.x", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT,
@@ -45,7 +32,7 @@ function side2side(startpos){
     return anim;
 };
 
-function upNdown(startpos){
+function slideup(startpos){
   var anim = new BABYLON.Animation("tutoAnimation", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT,
                                                                     BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
     // Animation keys
@@ -56,21 +43,17 @@ function upNdown(startpos){
     });
 
     keys.push({
-        frame: 50,
-        value: startpos+40
+        frame: 250,
+        value: startpos+300
     });
 
-    keys.push({
-        frame: 100,
-        value: startpos
-    });
     anim.setKeys(keys);
 
     return anim;
 };
 
-function side2side(startpos){
-  var anim = new BABYLON.Animation("tutoAnimation", "position.x", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+function slidedown(startpos){
+  var anim = new BABYLON.Animation("tutoAnimation", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT,
                                                                     BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
     // Animation keys
     var keys = [];
@@ -80,14 +63,10 @@ function side2side(startpos){
     });
 
     keys.push({
-        frame: 30,
-        value: startpos+30
+        frame: 250,
+        value: startpos-300
     });
 
-    keys.push({
-        frame: 60,
-        value: startpos
-    });
     anim.setKeys(keys);
 
     return anim;
