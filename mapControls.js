@@ -99,6 +99,7 @@ function castRay(bullet){
 
   if (hit.pickedMesh && bullet.intersectsMesh(hit.pickedMesh, true)){
     points++;
+
     bullet.dispose();
     hit.pickedMesh.dispose();
   }
@@ -106,6 +107,7 @@ function castRay(bullet){
 
 //generate bullet
 function shoot(){
+  pewsound.play();
   var bullet = BABYLON.Mesh.CreateSphere('bullet', 10, 2, scene);
   var startPos = player.position;
 
@@ -129,6 +131,7 @@ function shoot(){
   //bullet timeout
   setTimeout(function(){
     bullet.dispose();
+    return;
   },5000);
 }
 
@@ -157,6 +160,15 @@ function holdPlayer(){
 }
 
 var life = 3;
+
+function gameover(){
+  up = down = left = right = 0;
+  setTimeout( function(){ //if player is defeated
+    alert("GAME OVER\n \n POINTS: " + points);
+    window.location.reload();
+  }, 1000 );
+}
+
 function hitReg(){
   var origin = player.position;
 
@@ -172,14 +184,18 @@ function hitReg(){
 
   var hit = scene.pickWithRay(ray, target);
 
+  // let rayHelper = new BABYLON.RayHelper(ray);
+  // rayHelper.show(scene);
+
   if (hit.pickedMesh){
     hit.pickedMesh.dispose();
-
-
     life--;
+    smacksound.play();
+
     if (life<0) {
-      makeParticles(scene);
-      player.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(0, -60, 0));
+      makeParticles(scene,player);
+      player.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(x, -60, z));
+      gameover();
 
     }
   }

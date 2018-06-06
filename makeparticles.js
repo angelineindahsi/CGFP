@@ -1,11 +1,11 @@
 //Create a particle system
-function makeParticles(scene){
+function makeParticles(scene, source){
     var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
     particleSystem.particleTexture = new BABYLON.Texture("ch2.jpg", scene);
-  
+
 
     // Where the particles come from
-    particleSystem.emitter = player; // the starting object, the emitter
+    particleSystem.emitter = source; // the starting object, the emitter
     particleSystem.minEmitBox = new BABYLON.Vector3(-1, 0, 0); // Starting all from
     particleSystem.maxEmitBox = new BABYLON.Vector3(1, 0, 0); // To...
 
@@ -45,12 +45,4 @@ function makeParticles(scene){
     particleSystem.updateSpeed = 0.005;
 
     particleSystem.start();
-      up = down = left = right = 0;
-      
-
-  setTimeout( function(){ //if player is defeated
-    alert("GAME OVER\n \n POINTS: " + points); 
-    window.location.reload();
-  }, 1000 );
-
   }

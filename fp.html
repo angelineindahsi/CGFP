@@ -29,12 +29,16 @@
 
 			//make babylon engine
 			engine = new BABYLON.Engine(canvas, true);
+			engine.enableOfflineSupport = false//disable caching
 
 			//make scene
 			scene = new BABYLON.Scene(engine);
 
 			//play music
-			//var music = new BABYLON.Sound("Music", "wotw.wav", scene, null, { loop: true, autoplay: true });
+			music = new BABYLON.Sound("Music", "wotw.wav", scene, null, { loop: true, autoplay: true });
+			music.play();
+			pewsound = new BABYLON.Sound("pew", "pew.wav", scene, null, { loop: false, autoplay: false });
+			smacksound = new BABYLON.Sound("smack", "smack.wav", scene, null, { loop: false, autoplay: false });
 
 			//physics engine
 			gravity = new BABYLON.Vector3(0, 0 ,0);
@@ -64,7 +68,7 @@
 			lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
 			//create player
-			player = getPlayer(scene);
+			player = getPlayer(scene); player.position.y -= 3;
 			freecam.parent = player;
 
 			//values to increment challenge
@@ -75,44 +79,32 @@
 
 			//summon enemy interval
 			setInterval(function(){
-				if(1){
 					mons[i] = getEnemy(scene);
 
 					if (Math.floor(i%2) == 0) {
 						mons[i].position = new BABYLON.Vector3((Math.floor(Math.random()*300)-161),3,163);
-						scene.beginDirectAnimation(mons[i], [slidedown(mons[i].position.z)], 0, 250, true);
+						scene.beginDirectAnimation(mons[i], [slideup(mons[i].position.z)], 0, 250, true);
 					}
 					else {
 						mons[i].position = new BABYLON.Vector3((Math.floor(Math.random()*300)-161),3,-163);
 						mons[i].rotation.y = Math.PI;
-						scene.beginDirectAnimation(mons[i], [slideup(mons[i].position.z)], 0, 250, true);
+						scene.beginDirectAnimation(mons[i], [slidedown(mons[i].position.z)], 0, 250, true);
 					}
 					scene.beginDirectAnimation(mons[i], [side2side(mons[i].position.x)], 0, 2 * frameRate, true);
-
 					i++;
-				}
-		},1000);
+		},2000);
 
 			//passive functions
-			var enemyct = 0;
 			scene.registerBeforeRender(function () {
-				holdPlayer();
-				waterFlow(skybox);
 				hitReg();
-
-				// if (i>2) {
-				// 	holdEnemy(mons[enemyct]);
-				// 	enemyct++;
-				// }
-				// if (enemyct>i) {
-				// 	enemyct = 0;
-				// }
+				holdPlayer();
 
 			});
 
 			//render
 			engine.runRenderLoop(function(){
 				scene.render();
+				waterFlow(skybox);
 
 			});
 		});
